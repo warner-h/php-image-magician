@@ -23,7 +23,7 @@
      #
      #        - See end of doc for more examples -
      #
-     #  Supported file types include: jpg, png, gif, bmp, psd (read)
+     #  Supported file types include: jpg, png, gif, bmp, webp, avif, psd (read)
      #
      #
      #
@@ -2358,9 +2358,16 @@ class imageLib
         if (!file_exists($file) && !$this->checkStringStartsWith('http://', $file)) { if ($this->debug) { die('Image not found.'); }else{ die(); }};
 
         $img = false;
-        if (function_exists("getimagesize")) {
+        $imageType = null;
+        if (function_exists("exif_imagetype")) {
+            $imageType = exif_imagetype($file);
+        }
+        elseif (function_exists("getimagesize")) {
             $info = getimagesize($file);
-            switch ($info[2]) {
+            $imageType = $info[2];
+        }
+        if (isset($imageType)) {
+            switch ($imageType) {
                 case IMAGETYPE_JPEG:
                 case IMAGETYPE_JPEG2000:
                     $img = @imagecreatefromjpeg($file);
@@ -2378,15 +2385,23 @@ class imageLib
                 case IMAGETYPE_PSD:
                     $img = @$this->imagecreatefrompsd($file);
                     break;
-                case IMAGETYPE_WEBP:
-                    $img = @imagecreatefromwebp($file);
-                    break;
                 default:
                     $img = false;
                     break;
             }
-        }
 
+            // *** Handle WEBP and AVIF only if constants are defined (PHP 7.1+ and 8.1+)
+            if (!$img && defined('IMAGETYPE_WEBP') && $imageType === IMAGETYPE_WEBP) {
+                if (function_exists('imagecreatefromwebp')) {
+                    $img = @imagecreatefromwebp($file);
+                }
+            }
+            if (!$img && defined('IMAGETYPE_AVIF') && $imageType === IMAGETYPE_AVIF) {
+                if (function_exists('imagecreatefromavif')) {
+                    $img = @imagecreatefromavif($file);
+                }
+            }
+        }
         if (!$img) {
             // *** Get extension
             $extension = strrchr($file, '.');
@@ -2409,7 +2424,14 @@ class imageLib
                     $img = @$this->imagecreatefrompsd($file);
                     break;
                 case '.webp':
-                    $img = @imagecreatefromwebp($file);
+                    if (function_exists('imagecreatefromwebp')) {
+                        $img = @imagecreatefromwebp($file);
+                    }
+                    break;
+                case '.avif':
+                    if (function_exists('imagecreatefromavif')) {
+                        $img = @imagecreatefromavif($file);
+                    }
                     break;
 
             // ... etc
@@ -2512,13 +2534,29 @@ class imageLib
                 file_put_contents($savePath, $this->GD2BMPstring($this->imageResized));
                 break;
             case '.webp':
-                $this->checkInterlaceImage($this->isInterlace);
-                if (imagetypes() & IMG_WEBP) {
-                    imagewebp($this->imageResized, $savePath, $imageQuality);
-                }else{
+                if (function_exists('imagewebp')) {
+                    $this->checkInterlaceImage($this->isInterlace);
+                    if (defined('IMG_WEBP') && (imagetypes() & IMG_WEBP)) {
+                        imagewebp($this->imageResized, $savePath, $imageQuality);
+                    } else {
+                        $error = 'webp';
+                    }
+                } else {
                     $error = 'webp';
                 }
-                // ... etc
+                break;
+            case '.avif':
+                if (function_exists('imageavif')) {
+                    $this->checkInterlaceImage($this->isInterlace);
+                    if (defined('IMG_AVIF') && (imagetypes() & IMG_AVIF)) {
+                        imageavif($this->imageResized, $savePath, $imageQuality);
+                    } else {
+                        $error = 'avif';
+                    }
+                } else {
+                    $error = 'avif';
+                }
+                break;
 
             default:
 
@@ -2573,8 +2611,20 @@ class imageLib
                 imagepng($this->imageResized, NULL, $invertScaleQuality);
                 break;
             case 'webp':
-                header('Content-type: image/webp');
-                imagewebp($this->imageResized, NULL, intval($imageQuality));
+                if (function_exists('imagewebp')) {
+                    header('Content-type: image/webp');
+                    imagewebp($this->imageResized, NULL, intval($imageQuality));
+                } else {
+                    if ($this->debug) { die('WEBP support is not enabled.'); }else{ die(); }
+                }
+                break;
+            case 'avif':
+                if (function_exists('imageavif')) {
+                    header('Content-type: image/avif');
+                    imageavif($this->imageResized, NULL, intval($imageQuality));
+                } else {
+                    if ($this->debug) { die('AVIF support is not enabled.'); }else{ die(); }
+                }
                 break;
             case 'bmp':
                 echo 'bmp file format is not supported.';
@@ -2697,6 +2747,7 @@ class imageLib
                 case 'image/bmp':
                 case 'image/x-windows-bmp':
                 case 'image/webp':
+                case 'image/avif':
                     $isImage = true;
                     break;
                 default:
