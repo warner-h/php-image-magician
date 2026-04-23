@@ -3,8 +3,7 @@
 
 Image manipulation at it's finest.
 
-home page @ http://phpimagemagician.oberto.co.nz/
-
+Forked from [Oberto/php-image-magician](https://github.com/Oberto/php-image-magician)
 
 ### Features
 * Quick and easy resize - Resize to landscape, portrait, or auto
@@ -24,7 +23,7 @@ home page @ http://phpimagemagician.oberto.co.nz/
 
 
 ### Resize &amp; Crop Example
-						
+
     // Include PHP Image Magician library
     require_once('php_image_magician.php');
 
@@ -36,8 +35,8 @@ home page @ http://phpimagemagician.oberto.co.nz/
 
     // Save resized image as a PNG
     $magicianObj -> saveImage('racecar_small.png');
-			
-      
+
+
 
 ### Watermark Example
 
@@ -51,17 +50,7 @@ home page @ http://phpimagemagician.oberto.co.nz/
     $magicianObj -> addWatermark('monkey.png', 'br', 50);
 
     // Save watermarked image as a PNG
-    $magicianObj -> saveImage('racecar_small.png');      
-    
-    
-Check out the [documentation](http://phpimagemagician.oberto.co.nz/docs.html) for more examples.
+    $magicianObj -> saveImage('racecar_small.png');
 
 ### Contributions
 If you'd like to contribute features or bug fixes to the project, please be my guest.
-
-If you found this code useful, or maybe it saved you a tonne of time, and would like to contribute in other ways, all donations go towards hosting and future developement.
-
-**BTC:** 1BacitzfnJashc2DYKeiAQzr9tWH5en9uM  
-**ETH:** 0x13E9C47b3158583271a471Cb76C8ef6285c925Eb  
-**LTC:** LWcauH9vxcGt3mJGgBWfxCYXniLLSWESyu 
-
