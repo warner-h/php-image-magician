@@ -2362,6 +2362,7 @@ class imageLib
         $info = getimagesize($file);
         switch ($info[2]) {
             case IMAGETYPE_JPEG:
+            case IMAGETYPE_JPEG2000:
                 $img = @imagecreatefromjpeg($file);
                 break;
             case IMAGETYPE_PNG:
@@ -2370,8 +2371,15 @@ class imageLib
             case IMAGETYPE_GIF:
                 $img = @imagecreatefromgif($file);
                 break;
+            case IMAGETYPE_BMP:
             case IMAGETYPE_WBMP:
                 $img = @$this->imagecreatefrombmp($file);
+                break;
+            case IMAGETYPE_PSD:
+                $img = @$this->imagecreatefrompsd($file);
+                break;
+            case IMAGETYPE_WEBP:
+                $img = @imagecreatefromwebp($file);
                 break;
             default:
                 $img = false;
@@ -2381,7 +2389,7 @@ class imageLib
         if (!$img) {
             // *** Get extension
             $extension = strrchr($file, '.');
-            $extension = fix_strtolower($extension);
+            $extension = strtolower($extension);
             switch ($extension) {
                 case '.bmp':
                     $img = @$this->imagecreatefrombmp($file);
@@ -2389,7 +2397,7 @@ class imageLib
                 case '.psd':
                     $img = @$this->imagecreatefrompsd($file);
                     break;
-            case '.webp':
+                case '.webp':
                     $img = @imagecreatefromwebp($file);
                     break;
 
