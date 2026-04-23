@@ -2358,32 +2358,33 @@ class imageLib
         if (!file_exists($file) && !$this->checkStringStartsWith('http://', $file)) { if ($this->debug) { die('Image not found.'); }else{ die(); }};
 
         $img = false;
-
-        $info = getimagesize($file);
-        switch ($info[2]) {
-            case IMAGETYPE_JPEG:
-            case IMAGETYPE_JPEG2000:
-                $img = @imagecreatefromjpeg($file);
-                break;
-            case IMAGETYPE_PNG:
-                $img = @imagecreatefrompng($file);
-                break;
-            case IMAGETYPE_GIF:
-                $img = @imagecreatefromgif($file);
-                break;
-            case IMAGETYPE_BMP:
-            case IMAGETYPE_WBMP:
-                $img = @$this->imagecreatefrombmp($file);
-                break;
-            case IMAGETYPE_PSD:
-                $img = @$this->imagecreatefrompsd($file);
-                break;
-            case IMAGETYPE_WEBP:
-                $img = @imagecreatefromwebp($file);
-                break;
-            default:
-                $img = false;
-                break;
+        if (function_exists("getimagesize")) {
+            $info = getimagesize($file);
+            switch ($info[2]) {
+                case IMAGETYPE_JPEG:
+                case IMAGETYPE_JPEG2000:
+                    $img = @imagecreatefromjpeg($file);
+                    break;
+                case IMAGETYPE_PNG:
+                    $img = @imagecreatefrompng($file);
+                    break;
+                case IMAGETYPE_GIF:
+                    $img = @imagecreatefromgif($file);
+                    break;
+                case IMAGETYPE_BMP:
+                case IMAGETYPE_WBMP:
+                    $img = @$this->imagecreatefrombmp($file);
+                    break;
+                case IMAGETYPE_PSD:
+                    $img = @$this->imagecreatefrompsd($file);
+                    break;
+                case IMAGETYPE_WEBP:
+                    $img = @imagecreatefromwebp($file);
+                    break;
+                default:
+                    $img = false;
+                    break;
+            }
         }
 
         if (!$img) {
@@ -2391,6 +2392,16 @@ class imageLib
             $extension = strrchr($file, '.');
             $extension = strtolower($extension);
             switch ($extension) {
+                case '.jpg':
+                case '.jpeg':
+                    $img = @imagecreatefromjpeg($file);
+                    break;
+                case '.gif':
+                    $img = @imagecreatefromgif($file);
+                    break;
+                case '.png':
+                    $img = @imagecreatefrompng($file);
+                    break;
                 case '.bmp':
                     $img = @$this->imagecreatefrombmp($file);
                     break;
@@ -2670,23 +2681,35 @@ class imageLib
 
         $file = $this->fileName;
         $isImage = false;
+        if (function_exists('finfo_open')) {
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $mimeType = finfo_file($finfo, $file);
+            finfo_close($finfo);
 
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $mimeType = finfo_file($finfo, $file);
-        finfo_close($finfo);
-
-        switch($mimeType) {
-            case 'image/jpeg':
-            case 'image/gif':
-            case 'image/png':
-            case 'image/bmp':
-            case 'image/x-windows-bmp':
-                $isImage = true;
-                break;
-            default:
-                $isImage = false;
+            switch($mimeType) {
+                case 'image/jpeg':
+                case 'image/gif':
+                case 'image/png':
+                case 'image/bmp':
+                case 'image/x-windows-bmp':
+                case 'image/webp':
+                    $isImage = true;
+                    break;
+                default:
+                    $isImage = false;
+            }
         }
-
+        elseif (function_exists('getimagesize')) {
+            // open with GD
+            if (@is_array(getimagesize($file))) {
+                $isImage = true;
+            }
+        } elseif (function_exists('exif_imagetype')) {
+            // open with EXIF
+            if (false !== exif_imagetype($file)) {
+                $isImage = true;
+            }
+        }
         return $isImage;
     }
 
