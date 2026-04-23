@@ -2537,7 +2537,7 @@ class imageLib
 
 ## --------------------------------------------------------
 
-    public function displayImage($fileType = 'jpg', $imageQuality="100")
+    public function displayImage($fileType = 'jpg', $imageQuality=100)
     # Author:     Jarrod Oberto
     # Date:       18-11-09
     # Purpose:    Display images directly to the browser
@@ -2555,7 +2555,7 @@ class imageLib
             case 'jpg':
             case 'jpeg':
                 header('Content-type: image/jpeg');
-                imagejpeg($this->imageResized, NULL, $imageQuality);
+                imagejpeg($this->imageResized, NULL, intval($imageQuality));
                 break;
             case 'gif':
                 header('Content-type: image/gif');
@@ -2572,9 +2572,13 @@ class imageLib
 
                 imagepng($this->imageResized, NULL, $invertScaleQuality);
                 break;
+            case 'webp':
+                header('Content-type: image/webp');
+                imagewebp($this->imageResized, NULL, intval($imageQuality));
+                break;
             case 'bmp':
                 echo 'bmp file format is not supported.';
-            break;
+                break;
 
                 // ... etc
 
@@ -2634,11 +2638,11 @@ class imageLib
     {
         if(extension_loaded('gd') && function_exists('gd_info'))
         {
-                $gdInstalled = true;
+            $gdInstalled = true;
         }
         else
         {
-                $gdInstalled = false;
+            $gdInstalled = false;
         }
 
         return $gdInstalled;
