@@ -1,6 +1,6 @@
 <?php
 
-	require_once('../php_image_magician.php');
+	require_once('../imageLib.php');
 
 	/*	Purpose: Open image
      *	Usage:	 resize('filename.type')
@@ -17,18 +17,18 @@
      *
      *      exact = The exact height and width dimensions you set. (Default)
      *      portrait = Whatever height is passed in will be the height that
-     *          is set. The width will be calculated and set automatically 
-     *          to a the value that keeps the original aspect ratio. 
-     *      landscape = The same but based on the width. We try make the image 
+     *          is set. The width will be calculated and set automatically
+     *          to a the value that keeps the original aspect ratio.
+     *      landscape = The same but based on the width. We try make the image
      *         the biggest size we can while stil fitting inside the box size
      *      auto = Depending whether the image is landscape or portrait, this
-     *          will automatically determine whether to resize via 
+     *          will automatically determine whether to resize via
      *          dimension 1,2 or 0
      *      crop = Will resize and then crop the image for best fit
- 	 *	
- 	 *			 sharpen - set as true if you would like shapening applied to 
- 	 *				to your resized image    
-     */	
+ 	 *
+ 	 *			 sharpen - set as true if you would like shapening applied to
+ 	 *				to your resized image
+     */
 	$magicianObj -> resizeImage(200, 200, 'crop', true);
 
 

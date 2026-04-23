@@ -4,14 +4,14 @@
 /*
 	As of version 4.2.5 you can now "chain" your image processing for the same
 	image. That is, you can process the same image to produce multiple different
-	outputs. 
+	outputs.
 
-	For example, say you need 3 sizes of an image. By calling reset() after each 
+	For example, say you need 3 sizes of an image. By calling reset() after each
 	save, you can freely apply new transformations to produce the next image.
 
 */
 
-	require_once('../php_image_magician.php');
+	require_once('../imageLib.php');
 
 	/*	Purpose: Open image
      *	Usage:	 resize('filename.type')

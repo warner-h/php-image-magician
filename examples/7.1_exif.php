@@ -1,6 +1,6 @@
 <?php
 
-	require_once('../php_image_magician.php');
+	require_once('../imageLib.php');
 
 	/*	Purpose: Open image
      *	Usage:	 resize('filename.type')
@@ -18,8 +18,8 @@
 
 
 	// *** Array values assigned to variables
-    $make = $exifArray['make'];    
-    $model = $exifArray['model']; 
+    $make = $exifArray['make'];
+    $model = $exifArray['model'];
     $date = $exifArray['date'];
     $exposure_time = $exifArray['exposure time'];
     $aperture_value = $exifArray['aperture value'];
@@ -32,7 +32,7 @@
     $etering_mode = $exifArray['metering mode'];
     $flash_status = $exifArray['flash status'];
     $creator = $exifArray['creator'];
-    $copyright = $exifArray['copyright']; 
+    $copyright = $exifArray['copyright'];
 
 	// *** Display
 	echo 'make: ' . $make . '<br />';

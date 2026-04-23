@@ -1,6 +1,6 @@
 <?php
 
-	require_once('../php_image_magician.php');
+	require_once('../imageLib.php');
 
 	/*	Purpose: Open image
      *	Usage:	 resize('filename.type')

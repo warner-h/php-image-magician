@@ -1,6 +1,6 @@
 <?php
 
-	require_once('../php_image_magician.php');
+	require_once('../imageLib.php');
 
 	/*	Purpose: Open image
      *	Usage:	 resize('filename.type')
@@ -16,7 +16,7 @@
      * 			 padding - Ignored when specifying exact pixel location
      * 			 transparency - Adds transparency to your watermark image. Set
 	 *				value range is 0-100. 100 not being transparent at all.
-     *	Output:	 Adds a watermark image 20px in and 30px down with 30% 
+     *	Output:	 Adds a watermark image 20px in and 30px down with 30%
 	 *  		 transparency
      */
 	$magicianObj -> addWatermark('sample_images/monkey.png', '20 x 30', 0, 30);

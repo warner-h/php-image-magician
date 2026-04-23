@@ -1,7 +1,7 @@
 <?php
 
 
-	require_once('../php_image_magician.php');
+	require_once('../imageLib.php');
 
 	/*	Purpose: Open image
      *	Usage:	 resize('filename.type')
@@ -10,11 +10,11 @@
 	$magicianObj = new imageLib('sample_images/monkey.png');
 
 
-	/*	Purpose: 
-     *	Usage:	 
-     * 	Params:	 
-     *			 
-     */	
+	/*	Purpose:
+     *	Usage:
+     * 	Params:
+     *
+     */
 	$magicianObj -> setTransparency(false);
 	$magicianObj -> setFillColor('#cccccc');
 	$magicianObj -> resizeImage(64, 64);

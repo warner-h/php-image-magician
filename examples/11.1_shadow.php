@@ -1,6 +1,6 @@
 <?php
 
-	require_once('../php_image_magician.php');
+	require_once('../imageLib.php');
 
 	/*	Purpose: Open image
      *	Usage:	 resize('filename.type')
@@ -11,9 +11,9 @@
 
 	/*	Purpose: Add a drop shadow to your image
      *	Usage:	 addShadow([shadow angle], [blur], [bg color])
-     * 	Params:	 shadow angle - The angle of the shadow to display. 0 will 
+     * 	Params:	 shadow angle - The angle of the shadow to display. 0 will
 	 *				surround the image in a shadow.
-	 *			 blur - The amount of blur to apply. The higher the amount, the 
+	 *			 blur - The amount of blur to apply. The higher the amount, the
      *				bigger the shadow.
 	 *			bg color - The background color behind the shadow
      */

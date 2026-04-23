@@ -1,6 +1,6 @@
 <?php
 
-	require_once('../php_image_magician.php');
+	require_once('../imageLib.php');
 
 	/*	Purpose: Open image
      *	Usage:	 resize('filename.type')
@@ -12,8 +12,8 @@
 	/*	Purpose: Resize image
      *	Usage:	 resizeImage([width], [height])
      * 	Params:	 width - the new width to resize to
-     *			 height - the new height to resize to 
-     */	
+     *			 height - the new height to resize to
+     */
 	$magicianObj -> resizeImage(100, 200);
 
 

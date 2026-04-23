@@ -1,6 +1,6 @@
 <?php
 
-	require_once('../php_image_magician.php');
+	require_once('../imageLib.php');
 
 	/*	Purpose: Open image
      *	Usage:	 resize('filename.type')
@@ -19,7 +19,7 @@
      *			 angle - The angle of the text in degress
      *			 font - You can supply your own ttf font. Pass in the name and
      *				path
-     *	Output:	 This will add the word "test" 20px in and 30px down on the 
+     *	Output:	 This will add the word "test" 20px in and 30px down on the
      *			 original image. The text will be gray (#ccc), 12px high, read
 	 * 				left to right (angle = 0) and will use the font arialbd.ttf
      *			 default color, white.

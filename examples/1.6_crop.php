@@ -1,6 +1,6 @@
 <?php
 
-	require_once('../php_image_magician.php');
+	require_once('../imageLib.php');
 
 	/*	Purpose: Open image
      *	Usage:	 resize('filename.type')
@@ -13,13 +13,13 @@
      *	Usage:	 resizeImage([width], [height], [resize type], [sharpen])
      * 	Params:	 width - the width to crop to
      *			 height - the height to crop to
-     *			 crop type 
-     *  
-     */	
-	
+     *			 crop type
+     *
+     */
+
 	$magicianObj -> cropImage(150, 150, 'br');
-	
-	
+
+
 	/*	Purpose: Save image
      *	Usage:	 saveImage('[filename.type]', [quality])
      * 	Params:	 filename.type - the filename and file type to save as

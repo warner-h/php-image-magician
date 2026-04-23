@@ -1,6 +1,6 @@
 <?php
 
-	require_once('../php_image_magician.php');
+	require_once('../imageLib.php');
 
 	/*	Purpose: Open image
      *	Usage:	 resize('filename.type')
@@ -13,9 +13,9 @@
      *	Usage:	 addText([text], [position], [padding])
      * 	Params:	 text - the string of text to add
      * 			 position - choose from the below options
-     * 
+     *
      * 				tl = top left,
-     * 				t  = top (middle), 
+     * 				t  = top (middle),
      * 				tr = top right,
      * 				l  = left,
      * 				m  = middle,

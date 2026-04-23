@@ -1,6 +1,6 @@
 <?php
 
-	require_once('../php_image_magician.php');
+	require_once('../imageLib.php');
 
 	/*	Purpose: Open image
      *	Usage:	 resize('filename.type')
@@ -13,9 +13,9 @@
      *	Usage:	 addWatermark([watermark_image], [position], [padding])
      * 	Params:	 watermark_image - the image to use as your watermark
      * 			 position - choose from the below options
-     * 
+     *
      * 				tl = top left,
-     * 				t  = top (middle), 
+     * 				t  = top (middle),
      * 				tr = top right,
      * 				l  = left,
      * 				m  = middle,
@@ -25,7 +25,7 @@
      * 				br = bottom right
      *
      * 			 padding - This moves the image away from the edges (in pixels)
-     *	Output:	 Adds a watermark image to the bottom-right corner, 50px away 
+     *	Output:	 Adds a watermark image to the bottom-right corner, 50px away
 	 *  		 from the bottom and right edges, of your image
      */
 	$magicianObj -> addWatermark('sample_images/monkey.png', 'br', 50);

@@ -1,6 +1,6 @@
 <?php
 
-	require_once('../php_image_magician.php');
+	require_once('../imageLib.php');
 
 	/*	Purpose: Open image
      *	Usage:	 resize('filename.type')
@@ -11,7 +11,7 @@
 
 	/*
 		It's also possible to "stack" transformations. The following is one
-		example of many possibilities	
+		example of many possibilities
 	 */
 
 

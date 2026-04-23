@@ -1,6 +1,6 @@
 <?php
 
-	require_once('../php_image_magician.php');
+	require_once('../imageLib.php');
 
 	/*	Purpose: Open image
      *	Usage:	 resize('filename.type')
@@ -10,7 +10,7 @@
 	$magicianObj = new imageLib('sample_images/racecar.jpg');
 
 
-	/*	Purpose: Add a caption box to your image. The intended purpose is to 
+	/*	Purpose: Add a caption box to your image. The intended purpose is to
 	 *			 allow text to be easier to read by placing it on a caption box
      *	Usage:	 addCaptionBox([side], [thickness], [padding], [color], [transparency])
      * 	Params:	 side - the side of the image to display the box. The options are:
@@ -23,7 +23,7 @@
      *			thickness - how wide you want the caption box, in pixel.
 	 *			padding - distance from the caption box to the image edge.
      *			color - the color of the caption box
-     *			transparency - how transparent the caption box is. 0-100. 
+     *			transparency - how transparent the caption box is. 0-100.
 	 *				100 being not transparent at all.
      */
 	$magicianObj -> addCaptionBox('b', 40, 0, '#000', 50);
