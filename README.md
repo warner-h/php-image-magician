@@ -18,8 +18,12 @@ Forked from [Oberto/php-image-magician](https://github.com/Oberto/php-image-magi
 * All operations (eg. filter, effects) can be stacked
 * Image sharpening
 * Image type conversion
-* BMP support
+* BMP support (read/write support)
 * PSD reader support (limited)
+* **WebP support** (read/write support)
+* **PHP 8 compatible**
+* **Robust image type detection** - Uses PHP's native image type detection to avoid crashes when file extension doesn't match actual format
+* **Fallback image detection** - Gracefully handles environments without fileinfo extension
 
 
 ### Resize &amp; Crop Example
