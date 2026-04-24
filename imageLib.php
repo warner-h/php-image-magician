@@ -1,4 +1,7 @@
 <?php
+if (!class_exists('ImageLibException')) {
+    require_once __DIR__ . '/ImageLibException.php';
+}
      # ========================================================================#
      #
      #  This work is licensed under the Creative Commons Attribution 3.0 Unported
@@ -172,48 +175,50 @@ class imageLib
     # Notes:
     #
     {
-        if (!$this->testGDInstalled()) { if ($this->debug) { die('The GD Library is not installed.'); }else{ die(); }};
-
-            $this->initialise();
-
-            // *** Save the image file name. Only store this incase you want to display it
-            $this->fileName = $fileName;
-            $this->fileExtension = strtolower(strrchr($fileName, '.'));
-
-            // *** Open up the file
-            $this->image = $this->openImage($fileName);
-
-
-            // *** Assign here so we don't modify the original
-            $this->imageResized = $this->image;
-
-            // *** If file is an image
-            $this->isImage = $this->testIsImage();
-
-            if ($this->isImage)
-            {
-                // *** Get width and height
-                $this->width  = imagesx($this->image);
-                $this->widthOriginal = imagesx($this->image);
-                $this->height = imagesy($this->image);
-                $this->heightOriginal = imagesy($this->image);
-
-
-                /*  Added 15-09-08
-                 *  Get the filesize using this build in method.
-                 *  Stores an array of size
-                 *
-                 *  $this->imageSize[1] = width
-                 *  $this->imageSize[2] = height
-                 *  $this->imageSize[3] = width x height
-                 *
-                 */
-                $this->imageSize = getimagesize($this->fileName);
-
-            } else {
-                $this->errorArray[] = 'File is not an image';
-            }
+        if (!$this->testGDInstalled()) {
+            throw new ImageLibException('The GD Library is not installed.');
         }
+
+        $this->initialise();
+
+        // *** Save the image file name. Only store this incase you want to display it
+        $this->fileName = $fileName;
+        $this->fileExtension = strtolower(strrchr($fileName, '.'));
+
+        // *** Open up the file
+        $this->image = $this->openImage($fileName);
+
+
+        // *** Assign here so we don't modify the original
+        $this->imageResized = $this->image;
+
+        // *** If file is an image
+        $this->isImage = $this->testIsImage();
+
+        if ($this->isImage)
+        {
+            // *** Get width and height
+            $this->width  = imagesx($this->image);
+            $this->widthOriginal = imagesx($this->image);
+            $this->height = imagesy($this->image);
+            $this->heightOriginal = imagesy($this->image);
+
+
+            /*  Added 15-09-08
+                *  Get the filesize using this build in method.
+                *  Stores an array of size
+                *
+                *  $this->imageSize[1] = width
+                *  $this->imageSize[2] = height
+                *  $this->imageSize[3] = width x height
+                *
+                */
+            $this->imageSize = getimagesize($this->fileName);
+
+        } else {
+            $this->errorArray[] = 'File is not an image';
+        }
+    }
 
 ## --------------------------------------------------------
 
@@ -287,7 +292,9 @@ class imageLib
         $option = $this->prepOption($option);
 
         // *** Make sure the file passed in is valid
-        if (!$this->image) { if ($this->debug) { die('file ' . $this->getFileName() .' is missing or invalid'); }else{ die(); }};
+        if (!$this->image) {
+            throw new ImageLibException('file ' . $this->getFileName() .' is missing or invalid');
+        }
 
         // *** Get optimal width and height - based on $option
         $dimensionsArray = $this->getDimensions($newWidth, $newHeight, $option);
@@ -359,7 +366,9 @@ class imageLib
     {
 
         // *** Make sure the file passed in is valid
-        if (!$this->image) { if ($this->debug) { die('file ' . $this->getFileName() .' is missing or invalid'); }else{ die(); }};
+        if (!$this->image) {
+            throw new ImageLibException('file ' . $this->getFileName() .' is missing or invalid');
+        }
 
         $this->imageResized = $this->image;
         $this->crop($this->width, $this->height, $newWidth, $newHeight, $cropPos);
@@ -786,7 +795,7 @@ class imageLib
         }
         else
         {
-            if ($this->debug) { die('Sharpening required PHP 5.1.0 or greater.'); }
+            throw new ImageLibException('Sharpening required PHP 5.1.0 or greater.');
         }
     }
 
@@ -837,7 +846,7 @@ class imageLib
             if (strtolower($option[0]) == 'crop' && count($option) == 2) {
                 return 'crop';
             } else {
-                die('Crop resize option array is badly formatted.');
+                throw new ImageLibException('Crop resize option array is badly formatted.');
             }
         } else if (strpos($option, 'crop') !== false) {
             return 'crop';
@@ -1611,7 +1620,7 @@ class imageLib
             $y1 = $this->captionBoxPositionArray['y1'];
             $y2 = $this->captionBoxPositionArray['y2'];
         } else {
-            if ($this->debug) { die('No caption box found.'); }else{ return false; }
+            return false;
         }
 
 
@@ -1696,9 +1705,15 @@ class imageLib
         if (!$this->debug || !$debug) { $debug = false; }
 
         // *** Check all is good - check the EXIF library exists and the file exists, too.
-        if (!$this->testEXIFInstalled()) { if ($debug) { die('The EXIF Library is not installed.'); }else{ return array(); }};
-        if (!file_exists($this->fileName)) { if ($debug) { die('Image not found.'); }else{ return array(); }};
-        if ($this->fileExtension != '.jpg') { if ($debug) { die('Metadata not supported for this image type.'); }else{ return array(); }};
+        if (!$this->testEXIFInstalled()) {
+            return [];
+        }
+        if (!file_exists($this->fileName)) {
+            return [];
+        }
+        if ($this->fileExtension != '.jpg') {
+            return [];
+        }
         $exifData = exif_read_data($this->fileName, 'IFD0');
 
         // *** Format the apperture value
@@ -2075,7 +2090,7 @@ class imageLib
             if (!file_exists($font)) {
 
                 // *** If not, return false
-                if ($this->debug) { die('Font not found'); }else{ return false; }
+                return false;
             }
         }
 
@@ -2337,7 +2352,7 @@ class imageLib
             !$this->checkStringStartsWith('http://', $file) &&
             !$this->checkStringStartsWith('https://', $file)
             ) {
-            die(($this->debug)?'Image not found.':'');
+            throw new ImageLibException('Image not found.');
         };
 
         $img = false;
@@ -2472,16 +2487,13 @@ class imageLib
 
         // *** Perform a check or two.
         if (!is_resource($this->imageResized) && !is_a($this->imageResized,'GDImage')) {
-            if ($this->debug) {
-                die('saveImage: This is not a resource.');
-            }
-            else {
-                die();
-            }
+            throw new ImageLibException('saveImage: This is not a resource.');
         }
         $fileInfoArray = pathInfo($savePath);
         clearstatcache();
-        if (!is_writable($fileInfoArray['dirname'])) {  if ($this->debug) { die('The path is not writable. Please check your permissions.'); }else{ die(); }}
+        if (!is_writable($fileInfoArray['dirname'])) {
+            throw new ImageLibException('The path is not writable. Please check your permissions.');
+        }
 
         // *** Get extension
         $extension = strrchr($savePath, '.');
@@ -2582,12 +2594,7 @@ class imageLib
     {
 
         if (!is_resource($this->imageResized) && !is_a($this->imageResized,'GDImage')) {
-            if ($this->debug) {
-                die('saveImage: This is not a resource.');
-            }
-            else {
-                die();
-            }
+            throw new ImageLibException('displayImage: This is not a resource.');
         }
 
         switch($fileType)
@@ -2617,7 +2624,7 @@ class imageLib
                     header('Content-type: image/webp');
                     imagewebp($this->imageResized, NULL, intval($imageQuality));
                 } else {
-                    if ($this->debug) { die('WEBP support is not enabled.'); }else{ die(); }
+                    throw new ImageLibException('WEBP support is not enabled.');
                 }
                 break;
             case 'avif':
@@ -2625,7 +2632,7 @@ class imageLib
                     header('Content-type: image/avif');
                     imageavif($this->imageResized, NULL, intval($imageQuality));
                 } else {
-                    if ($this->debug) { die('AVIF support is not enabled.'); }else{ die(); }
+                    throw new ImageLibException('AVIF support is not enabled.');
                 }
                 break;
             case 'bmp':
@@ -3344,9 +3351,9 @@ class imageLib
     {
         if (file_exists($this->psdReaderPath)) {
 
-
-            include_once($this->psdReaderPath);
-
+            if (!class_exists('PhpPsdReader')) {
+                include_once($this->psdReaderPath);
+            }
             $psdReader = new PhpPsdReader($fileName);
 
             if (isset($psdReader->infoArray['error'])) return '';

@@ -36,7 +36,8 @@
     "autoload": {
         "classmap": [
             "imageLib.php",
-            "PhpPsdReader.php"
+            "PhpPsdReader.php",
+            "ImageLibException.php"
         ]
     },
     "config": {
