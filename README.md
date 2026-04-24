@@ -570,7 +570,9 @@ See the `examples/` directory for complete working examples:
 | `10.1_round_corners.php` | Rounded corners |
 | `11.1_shadow.php` | Drop shadows |
 | `12.1_caption_box.php` | Caption boxes |
+| `12 .2_caption_box.php` | Caption boxes with text|
 | `15.1_chaining_(reset).php` | Multiple outputs from one source |
+| `16.1_png_to_jpg.php` | Convert PNG to JPG with transparency handling |
 
 ---
 ## Contributing
