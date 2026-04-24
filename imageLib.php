@@ -16,7 +16,7 @@
      #  Param Out: Produces a resized image
      #  Requires : Requires PHP GD library.
      #  Usage Example:
-     #                     include("lib/php_image_magician.php");
+     #                     include("lib/imageLib.php");
      #                     $magicianObj = new imageLib('images/car.jpg');
      #                     $magicianObj -> resizeImage(150, 100, 0);
      #                     $magicianObj -> saveImage('images/car_small.jpg', 100);
@@ -219,8 +219,8 @@ class imageLib
 
     private function initialise () {
 
-        $this->psdReaderPath = dirname(__FILE__) . '/classPhpPsdReader.php';
-        $this->filterOverlayPath = dirname(__FILE__) . '/filters';
+        $this->psdReaderPath = __DIR__ . '/PhpPsdReader.php';
+        $this->filterOverlayPath = __DIR__ . '/filters';
 
         // *** Set if image should be interlaced or not.
         $this->isInterlace = false;

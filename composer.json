@@ -1,0 +1,46 @@
+{
+    "name": "warner-h/php-image-magician",
+    "description": "A comprehensive image manipulation library for PHP using the GD library. Features resize, crop, rotate, filters, watermarks, text, borders, shadows, reflections, and more.",
+    "type": "library",
+    "keywords": [
+        "image",
+        "gd",
+        "resize",
+        "crop",
+        "rotate",
+        "filter",
+        "watermark",
+        "thumbnail",
+        "php"
+    ],
+    "homepage": "https://github.com/warner-h/php-image-magician",
+    "license": "CC-BY-3.0",
+    "authors": [
+        {
+            "name": "Jarrod Oberto",
+            "role": "Original Author"
+        },
+        {
+            "name": "warner-h",
+            "role": "Maintainer"
+        }
+    ],
+    "require": {
+        "php": ">=7.0",
+        "ext-gd": "*"
+    },
+    "suggest": {
+        "ext-exif": "Required for EXIF metadata reading",
+        "ext-fileinfo": "Recommended for MIME type detection"
+    },
+    "autoload": {
+        "classmap": [
+            "imageLib.php",
+            "PhpPsdReader.php"
+        ]
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable"
+}
