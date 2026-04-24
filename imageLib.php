@@ -9,8 +9,8 @@
      #
      #  All rights reserved.
      #
-     #  Author:    Jarrod Oberto
-     #  Version:   1.5.2
+     #  Author:    Jarrod Oberto (original)
+     #  Version:   2.0
      #  Purpose:   Provide tools for image manipulation using GD
      #  Param In:  See functions.
      #  Param Out: Produces a resized image
@@ -1702,83 +1702,67 @@ class imageLib
         $exifData = exif_read_data($this->fileName, 'IFD0');
 
         // *** Format the apperture value
-        $ev = isset($exifData['ApertureValue']) ? $exifData['ApertureValue'] : '';
+        $ev = $exifData['ApertureValue'] ?? '';
         $apPeicesArray = explode('/', $ev);
         if (count($apPeicesArray) == 2) {
             $apertureValue = round($apPeicesArray[0] / $apPeicesArray[1], 2, PHP_ROUND_HALF_DOWN) . ' EV';
         } else { $apertureValue = '';}
 
         // *** Format the focal length
-        $focalLength = isset($exifData['FocalLength']) ? $exifData['FocalLength'] : '';
+        $focalLength = $exifData['FocalLength'] ?? '';
         $flPeicesArray = explode('/', $focalLength);
         if (count($flPeicesArray) == 2) {
             $focalLength = $flPeicesArray[0] / $flPeicesArray[1] . '.0 mm';
         } else { $focalLength = '';}
 
         // *** Format fNumber
-        $fNumber = isset($exifData['FNumber']) ? $exifData['FNumber'] : '';
+        $fNumber = $exifData['FNumber'] ?? '';
         $fnPeicesArray = explode('/', $fNumber);
         if (count($fnPeicesArray) == 2) {
             $fNumber = $fnPeicesArray[0] / $fnPeicesArray[1];
         } else { $fNumber = '';}
 
         // *** Resolve ExposureProgram
-        if (isset($exifData['ExposureProgram'])) { $ep =  $exifData['ExposureProgram']; }
-        if (isset($ep)) { $ep = $this->resolveExposureProgram($ep); }
+        $ep = $exifData['ExposureProgram'] ?? null;
+        if ($ep !== null) { $ep = $this->resolveExposureProgram($ep); }
 
 
         // *** Resolve MeteringMode
-        $mm = isset($exifData['MeteringMode']) ? $exifData['MeteringMode'] : '';
+        $mm = $exifData['MeteringMode'] ?? '';
         $mm = $this->resolveMeteringMode($mm);
 
         // *** Resolve Flash
-        $flash = isset($exifData['Flash']) ? $exifData['Flash'] : '';
+        $flash = $exifData['Flash'] ?? '';
         $flash = $this->resolveFlash($flash);
 
 
-        if (isset($exifData['Make'])) {
-            $exifDataArray['make'] = $exifData['Make'];
-        } else { $exifDataArray['make'] = ''; }
+        $exifDataArray['make'] = $exifData['Make'] ?? '';
 
-        if (isset($exifData['Model'])) {
-            $exifDataArray['model'] = $exifData['Model'];
-        } else { $exifDataArray['model'] = ''; }
+        $exifDataArray['model'] = $exifData['Model'] ?? '';
 
-        if (isset($exifData['DateTime'])) {
-            $exifDataArray['date'] = $exifData['DateTime'];
-        } else { $exifDataArray['date'] = ''; }
+        $exifDataArray['date'] = $exifData['DateTime'] ?? '';
 
-        if (isset($exifData['ExposureTime'])) {
-            $exifDataArray['exposure time'] = $exifData['ExposureTime'] . ' sec.';
-        } else { $exifDataArray['exposure time'] = ''; }
+        $exifDataArray['exposure time'] = $exifData['ExposureTime'] . ' sec.' ?? '';
 
         if ($apertureValue != '') {
             $exifDataArray['aperture value'] = $apertureValue;
         } else { $exifDataArray['aperture value'] = ''; }
 
-        if (isset($exifData['COMPUTED']['ApertureFNumber'])) {
-            $exifDataArray['f-stop'] = $exifData['COMPUTED']['ApertureFNumber'];
-        } else { $exifDataArray['f-stop'] = ''; }
+        $exifDataArray['f-stop'] = $exifData['COMPUTED']['ApertureFNumber'] ?? '';
 
-        if (isset($exifData['FNumber'])) {
-            $exifDataArray['fnumber'] = $exifData['FNumber'];
-        } else { $exifDataArray['fnumber'] = ''; }
+        $exifDataArray['fnumber'] = $exifData['FNumber'] ?? '';
 
         if ($fNumber != '') {
             $exifDataArray['fnumber value'] = $fNumber;
         } else { $exifDataArray['fnumber value'] = ''; }
 
-        if (isset($exifData['ISOSpeedRatings'])) {
-            $exifDataArray['iso'] = $exifData['ISOSpeedRatings'];
-        } else { $exifDataArray['iso'] = ''; }
+        $exifDataArray['iso'] = $exifData['ISOSpeedRatings'] ?? '';
 
         if ($focalLength != '') {
             $exifDataArray['focal length'] = $focalLength;
         } else { $exifDataArray['focal length'] = ''; }
 
-        if (isset($ep)) {
-            $exifDataArray['exposure program'] = $ep;
-        } else { $exifDataArray['exposure program'] = ''; }
+        $exifDataArray['exposure program'] = $ep ?? '';
 
         if ($mm != '') {
             $exifDataArray['metering mode'] = $mm;
@@ -1788,18 +1772,12 @@ class imageLib
             $exifDataArray['flash status'] = $flash;
         } else { $exifDataArray['flash status'] = ''; }
 
-        if (isset($exifData['Artist'])) {
-            $exifDataArray['creator'] = $exifData['Artist'] ;
-        } else { $exifDataArray['creator'] = ''; }
+        $exifDataArray['creator'] = $exifData['Artist']  ?? '';
 
-        if (isset($exifData['Copyright'])) {
-            $exifDataArray['copyright'] = $exifData['Copyright'];
-        } else { $exifDataArray['copyright'] = ''; }
+        $exifDataArray['copyright'] = $exifData['Copyright'] ?? '';
 
         // *** Orientation
-        if (isset($exifData['Orientation'])) {
-                $exifDataArray['orientation'] = $exifData['Orientation'];
-        } else { $exifDataArray['orientation'] = ''; }
+        $exifDataArray['orientation'] = $exifData['Orientation'] ?? '';
 
         return $exifDataArray;
     }
@@ -2081,7 +2059,7 @@ class imageLib
     private function getTextFont($font)
     {
         // *** Font path (shou
-        $fontPath =  dirname(__FILE__) . '/' . $this->fontDir;
+        $fontPath =  __DIR__ . '/' . $this->fontDir;
 
 
         // *** The below is/may be needed depending on your version (see ref)
@@ -2355,7 +2333,12 @@ class imageLib
     #
     {
 
-        if (!file_exists($file) && !$this->checkStringStartsWith('http://', $file)) { if ($this->debug) { die('Image not found.'); }else{ die(); }};
+        if (!file_exists($file) &&
+            !$this->checkStringStartsWith('http://', $file) &&
+            !$this->checkStringStartsWith('https://', $file)
+            ) {
+            die(($this->debug)?'Image not found.':'');
+        };
 
         $img = false;
         $imageType = null;
@@ -2380,7 +2363,12 @@ class imageLib
                     break;
                 case IMAGETYPE_BMP:
                 case IMAGETYPE_WBMP:
-                    $img = @$this->imagecreatefrombmp($file);
+                    if (function_exists('imagecreatefrombmp')) {
+                        $img = @imagecreatefrombmp($file);
+                    }
+                    else {
+                        $img = @$this->imagecreatefrombmp($file);
+                    }
                     break;
                 case IMAGETYPE_PSD:
                     $img = @$this->imagecreatefrompsd($file);
@@ -3109,6 +3097,9 @@ class imageLib
     function checkStringStartsWith($needle, $haystack)
     # Check if a string starts with a specific pattern
     {
+        if (function_exists('str_starts_with')) {
+            return str_starts_with($haystack, $needle);
+        }
         return (substr($haystack, 0, strlen($needle))==$needle);
     }
 
