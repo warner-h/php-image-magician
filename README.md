@@ -81,9 +81,11 @@ require_once('imageLib.php');
 ```bash
 composer require warner-h/php-image-magician
 ```
+Composer will autoload the class. No namespace is used:
 
 ```php
-use warner-h\ImageLib;
+// Class is autoloaded automatically
+$magician = new imageLib('racecar.jpg');
 ```
 
 ---
