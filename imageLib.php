@@ -2501,7 +2501,7 @@ class imageLib
             case '.jpeg':
                 $this->checkInterlaceImage($this->isInterlace);
                 if (imagetypes() & IMG_JPG) {
-                    imagejpeg($this->imageResized, $savePath, $imageQuality);
+                    imagejpeg($this->imageResized, $savePath, intval($imageQuality??-1));
                 } else {
                     $error = 'jpg';
                 }
@@ -2518,7 +2518,8 @@ class imageLib
 
             case '.png':
                 // *** Scale quality from 0-100 to 0-9
-                $scaleQuality = round(($imageQuality/100) * 9);
+                // *** If the quality is not set, default to 110 so that it becomes -1 after inverting which is the default for imagepng.
+                $scaleQuality = round((floatval($imageQuality??110)/100) * 9);
 
                 // *** Invert qualit setting as 0 is best, not 9
                 $invertScaleQuality = 9 - $scaleQuality;
@@ -2538,7 +2539,7 @@ class imageLib
                 if (function_exists('imagewebp')) {
                     $this->checkInterlaceImage($this->isInterlace);
                     if (defined('IMG_WEBP') && (imagetypes() & IMG_WEBP)) {
-                        imagewebp($this->imageResized, $savePath, $imageQuality);
+                        imagewebp($this->imageResized, $savePath, intval($imageQuality));
                     } else {
                         $error = 'webp';
                     }
@@ -2550,7 +2551,7 @@ class imageLib
                 if (function_exists('imageavif')) {
                     $this->checkInterlaceImage($this->isInterlace);
                     if (defined('IMG_AVIF') && (imagetypes() & IMG_AVIF)) {
-                        imageavif($this->imageResized, $savePath, $imageQuality);
+                        imageavif($this->imageResized, $savePath, intval($imageQuality));
                     } else {
                         $error = 'avif';
                     }
