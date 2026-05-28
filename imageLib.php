@@ -550,8 +550,7 @@ class imageLib
     #         remainder.
     {
 
-        switch (strval($option))
-        {
+        switch (strval($option)) {
             case '0':
             case 'exact':
                 $optimalWidth = $newWidth;
@@ -640,16 +639,14 @@ class imageLib
     {
         // *** If forcing is off...
         if (!$this->forceStretch) {
-
             // *** ...check if actual size is less than target size
             if ($this->width < $newWidth && $this->height < $newHeight) {
                 return array('optimalWidth' => $this->width, 'optimalHeight' => $this->height);
             }
         }
 
-        if ($this->height < $this->width)
-        // *** Image to be resized is wider (landscape)
-        {
+        if ($this->height < $this->width) {
+            // *** Image to be resized is wider (landscape)
             //$optimalWidth = $newWidth;
             //$optimalHeight= $this->getSizeByFixedWidth($newWidth);
 
@@ -657,20 +654,17 @@ class imageLib
             $optimalWidth = $dimensionsArray['optimalWidth'];
             $optimalHeight = $dimensionsArray['optimalHeight'];
         }
-        elseif ($this->height > $this->width)
+        elseif ($this->height > $this->width) {
             // *** Image to be resized is taller (portrait)
-            {
-                //$optimalWidth = $this->getSizeByFixedHeight($newHeight);
-                //$optimalHeight= $newHeight;
+            //$optimalWidth = $this->getSizeByFixedHeight($newHeight);
+            //$optimalHeight= $newHeight;
 
-                $dimensionsArray = $this->getSizeByFixedHeight($newWidth, $newHeight);
-                $optimalWidth = $dimensionsArray['optimalWidth'];
-                $optimalHeight = $dimensionsArray['optimalHeight'];
-            }
-            else
+            $dimensionsArray = $this->getSizeByFixedHeight($newWidth, $newHeight);
+            $optimalWidth = $dimensionsArray['optimalWidth'];
+            $optimalHeight = $dimensionsArray['optimalHeight'];
+        }
+        else {
             // *** Image to be resizerd is a square
-            {
-
             if ($newHeight < $newWidth) {
                 //$optimalWidth = $newWidth;
                 //$optimalHeight= $this->getSizeByFixedWidth($newWidth);
@@ -680,15 +674,15 @@ class imageLib
             } else if ($newHeight > $newWidth) {
                 //$optimalWidth = $this->getSizeByFixedHeight($newHeight);
                 //$optimalHeight= $newHeight;
-                            $dimensionsArray = $this->getSizeByFixedHeight($newWidth, $newHeight);
+                $dimensionsArray = $this->getSizeByFixedHeight($newWidth, $newHeight);
                 $optimalWidth = $dimensionsArray['optimalWidth'];
                 $optimalHeight = $dimensionsArray['optimalHeight'];
-        } else {
-            // *** Sqaure being resized to a square
-            $optimalWidth = $newWidth;
-            $optimalHeight= $newHeight;
+            } else {
+                // *** Sqaure being resized to a square
+                $optimalWidth = $newWidth;
+                $optimalHeight= $newHeight;
+            }
         }
-    }
 
         return array('optimalWidth' => $optimalWidth, 'optimalHeight' => $optimalHeight);
     }
