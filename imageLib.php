@@ -116,6 +116,9 @@ if (!class_exists('ImageLibException')) {
      #        (for top left), "m" (for middle), "br" (for bottom right)
      #        - also specify padding from edge amount (optional).
      #      - Set opacity of watermark (png).
+     #    * CORRECT EXIF ORIENTATION
+     #      - Apply EXIF orientation corrections using rectify()
+     #      - Supports all 8 EXIF orientation values (1-8)
      #    * ADD BORDER
      #    * USE HEX WHEN SPECIFYING COLORS (eg: #ffffff)
      #    * SAVE IMAGE OR OUTPUT TO SCREEN
@@ -161,6 +164,19 @@ class imageLib
     private $fontDir = 'fonts';
 
     private $cropFromTopPercent = 10;
+
+    # ========================================================================#
+    #  EXIF Orientation Constants
+    #  Reference: https://exifspec.org/
+    # ========================================================================#
+    const ORIENTATION_NORMAL = 1;              # No rotation, no flip
+    const ORIENTATION_FLIP_HORIZONTAL = 2;     # Mirror horizontal
+    const ORIENTATION_ROTATE_180 = 3;          # Rotate 180 degrees
+    const ORIENTATION_FLIP_VERTICAL = 4;       # Mirror vertical
+    const ORIENTATION_TRANSPOSE = 5;           # Mirror horizontal and rotate 270 clockwise
+    const ORIENTATION_ROTATE_90 = 6;           # Rotate 90 degrees clockwise
+    const ORIENTATION_TRANSVERSE = 7;          # Mirror horizontal and rotate 90 clockwise
+    const ORIENTATION_ROTATE_270 = 8;          # Rotate 270 degrees clockwise
 
 
 ## --------------------------------------------------------
@@ -1245,7 +1261,6 @@ class imageLib
         imagedestroy($im);
     }
 
-
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*-*-*-*-*-*-*-
     Rotate
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*-*-*-*-*-*-*/
@@ -1314,6 +1329,66 @@ class imageLib
         }
     }
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*-*-*-*-*-*-*-
+    Rectify
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*-*-*-*-*-*-*/
+
+    public function rectify($orientation)
+    # Purpose:    Correct image orientation based on EXIF orientation value
+    # Param in:   $orientation: EXIF orientation value (1-8)
+    #             Use constants for clarity:
+    #               - ORIENTATION_NORMAL (1): No correction needed
+    #               - ORIENTATION_FLIP_HORIZONTAL (2): Mirror horizontal
+    #               - ORIENTATION_ROTATE_180 (3): Rotate 180 degrees
+    #               - ORIENTATION_FLIP_VERTICAL (4): Mirror vertical
+    #               - ORIENTATION_TRANSPOSE (5): Mirror horizontal + rotate 270
+    #               - ORIENTATION_ROTATE_90 (6): Rotate 90 degrees clockwise
+    #               - ORIENTATION_TRANSVERSE (7): Mirror horizontal + rotate 90
+    #               - ORIENTATION_ROTATE_270 (8): Rotate 270 degrees clockwise
+    # Param out:  n/a (modifies $this->imageResized)
+    # Reference:  EXIF Specification - https://exifspec.org/
+    #             PHP imageflip() - https://php.net/manual/en/function.imageflip.php
+    #             PHP imagerotate() - https://php.net/manual/en/function.imagerotate.php
+    # Notes:      - Orientation 1 (normal) requires no action
+    #             - This method modifies the image in-place
+    #             - Commonly used after loading images with EXIF data
+    #             - imagerotate() rotates anticlockwise (counter-clockwise)
+    #               - 90° = 90 degrees anticlockwise (equivalent to 270° clockwise)
+    #               - 270° = 270 degrees anticlockwise (equivalent to 90° clockwise)
+    #             - Cases 5 and 7 intentionally fall through to apply flip + rotate
+    #               Case 5: Flip vertical then rotate 270° anticlockwise (transpose)
+    #               Case 7: Flip vertical then rotate 90° anticlockwise (transverse)
+    # Example:    $exif = $magicianObj->getExif(false);
+    #             $magicianObj->rectify($exif['orientation']);
+    #
+    {
+        if ($this->imageResized && intval($orientation) > 1 && intval($orientation) <= 8) {
+            $image = &$this->imageResized;
+            switch ($orientation) {
+                case self::ORIENTATION_FLIP_HORIZONTAL:  // 2
+                    imageflip($image, IMG_FLIP_HORIZONTAL);
+                    break;
+                case self::ORIENTATION_ROTATE_180:       // 3
+                    imageflip($image, IMG_FLIP_BOTH);
+                    break;
+                case self::ORIENTATION_FLIP_VERTICAL:    // 4
+                    imageflip($image, IMG_FLIP_VERTICAL);
+                    break;
+                case self::ORIENTATION_TRANSPOSE:        // 5
+                    imageflip($image, IMG_FLIP_VERTICAL);
+                    // Fall through to case 6 for rotation
+                case self::ORIENTATION_ROTATE_90:        // 6
+                    $image = imagerotate($image, 270, 0);
+                    break;
+                case self::ORIENTATION_TRANSVERSE:       // 7
+                    imageflip($image, IMG_FLIP_VERTICAL);
+                    // Fall through to case 8 for rotation
+                case self::ORIENTATION_ROTATE_270:       // 8
+                    $image = imagerotate($image, 90, 0);
+                    break;
+            }
+        }
+    }
 
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*-*-*-*-*-*-*-
     Round corners
