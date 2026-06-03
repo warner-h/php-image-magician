@@ -1279,7 +1279,7 @@ class imageLib
     #
     {
         if ($this->imageResized) {
-
+            $degrees = 0;
             if (is_integer($value)) {
                 $degrees = $value;
             }
@@ -3444,61 +3444,3 @@ class imageLib
 ## --------------------------------------------------------
 
 }
-
-
-
-
-/*
- *    Example with some API calls (outdated):
- *
- *
- *      ===============================
- *      Compulsary
- *      ===============================
- *
- *      include("classes/resize_class.php");
- *
- *      // *** Initialise object
- *      $magicianObj = new resize('images/cars/large/a.jpg');
- *
- *      // *** Turn off stretching (optional)
- *      $magicianObj -> setForceStretch(false);
- *
- *      // *** Resize object
- *      $magicianObj -> resizeImage(150, 100, 0);
- *
- *      ===============================
- *      Image options - can run none, one, or all.
- *      ===============================
- *
- *      //  *** Add watermark
- *        $magicianObj -> addWatermark('stamp.png');
- *
- *          // *** Add text
- *      $magicianObj -> addText('testing...');
- *
- *      ===============================
- *      Output options - can run one, or the other, or both.
- *      ===============================
- *
- *      // *** Save image to disk
- *      $magicianObj -> saveImage('images/cars/large/b.jpg', 100);
- *
- *          // *** Or output to screen (params in can be jpg, gif, png)
- *      $magicianObj -> displayImage('png');
- *
- *      ===============================
- *      Return options - return errors. nice for debuggin.
- *      ===============================
- *
- *      // *** Return error array
- *      $errorArray = $magicianObj -> getErrors();
- *
- *
- *      ===============================
- *      Cleanup options - not really neccessary, but good practice
- *      ===============================
- *
- *      // *** Free used memory
- *      $magicianObj -> __destruct();
- */
